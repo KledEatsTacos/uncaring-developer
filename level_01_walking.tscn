@@ -1,0 +1,72 @@
+[gd_scene load_steps=11 format=3 uid="uid://c5djaci3kglt6"]
+
+[ext_resource type="Script" uid="uid://bxjbyip4xi2lk" path="res://SimpleWalker.cs" id="1_dm17a"]
+[ext_resource type="Script" uid="uid://ccsut7m0y2npj" path="res://portal.cs" id="1_wxywq"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_wxywq"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gimj0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4nl86"]
+size = Vector3(1.01221, 1.73279, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wxywq"]
+transparency = 1
+cull_mode = 1
+albedo_color = Color(0, 0.447059, 1, 1)
+emission_enabled = true
+emission = Color(0, 0.447059, 1, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_4nl86"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_wxywq"]
+
+[sub_resource type="Sky" id="Sky_4nl86"]
+sky_material = SubResource("ProceduralSkyMaterial_wxywq")
+
+[sub_resource type="Environment" id="Environment_gimj0"]
+background_mode = 2
+sky = SubResource("Sky_4nl86")
+
+[node name="Level01_Walking" type="Node3D"]
+script = ExtResource("1_wxywq")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(50, 0, 0, 0, 1, 0, 0, 0, 50, 0.000858784, 0, 0.00766158)
+mesh = SubResource("BoxMesh_wxywq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.00166, 5.67555, 6.60135)
+light_energy = 6.98
+light_indirect_energy = 1.15
+light_volumetric_fog_energy = 4.601
+light_angular_distance = 24.55
+light_specular = 5.202
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0141125, 0.0909553, -0.0129123)
+script = ExtResource("1_dm17a")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.37015, 0)
+shape = SubResource("CapsuleShape3D_gimj0")
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.87507, 0)
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1164, 1.57949, 0.387276)
+shape = SubResource("BoxShape3D_4nl86")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D"]
+transform = Transform3D(0.00759132, 0, -0.999978, 0, 2.19687, 0, 1.13861, 0, 0.00666705, 15.1637, 1.84499, 0.399489)
+material_override = SubResource("StandardMaterial3D_wxywq")
+mesh = SubResource("BoxMesh_4nl86")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_gimj0")
+
+[connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
